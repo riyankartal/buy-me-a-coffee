@@ -116,21 +116,26 @@ export function TipJarApp() {
           </div>
         )}
 
-        {/* Hero */}
-        <div className="mb-5 rounded-3xl p-6" style={glass}>
-          <div className="mb-1 flex items-center gap-2">
-            <TokenUSDC variant="branded" size={20} />
-            <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--muted)' }}>
-              Powered by USDC on Arc
-            </span>
-          </div>
-          <h1 className="display mt-2 text-3xl font-bold leading-tight" style={{ color: 'var(--ink)', letterSpacing: '-0.03em' }}>
-            Support our work
-          </h1>
-          <p className="mt-1 text-sm" style={{ color: 'var(--ink-2)' }}>
-            Every tip goes directly on-chain and is split automatically.
-          </p>
-        </div>
+{/* Hero */}
+<div className="mb-5 rounded-3xl p-6 text-center" style={glass}>
+  <img 
+    src="/coffee-cup.png" 
+    alt="Coffee" 
+    className="mx-auto mb-4 h-40 w-40 object-contain drop-shadow-lg"
+  />
+  <div className="mb-1 flex items-center justify-center gap-2">
+    <TokenUSDC variant="branded" size={20} />
+    <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--muted)' }}>
+      Powered by USDC on Arc
+    </span>
+  </div>
+  <h1 className="display mt-2 text-3xl font-bold leading-tight" style={{ color: 'var(--ink)', letterSpacing: '-0.03em' }}>
+    Support our work
+  </h1>
+  <p className="mt-1 text-sm" style={{ color: 'var(--ink-2)' }}>
+    Every tip goes directly on-chain and is split automatically.
+  </p>
+</div>
 
         {/* Owner Withdraw Section */}
         {isOwner && (
