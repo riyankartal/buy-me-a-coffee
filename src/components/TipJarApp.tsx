@@ -1,14 +1,17 @@
 import { useState } from 'react'
-import { useAccount, useSwitchChain } from 'wagmi'
+import { useAccount, useSwitchChain, useWriteContract, useReadContract } from 'wagmi'
 import { ConnectKitButton } from 'connectkit'
+import { parseUnits } from 'viem'
 
 import { TokenUSDC } from '@web3icons/react'
-import { Coffee, Users } from 'lucide-react'
-import { TIPJAR_CHAIN_ID } from '../contract'
+import { Coffee, Users, Wallet } from 'lucide-react'
+import { TIPJAR_CHAIN_ID, TIPJAR_ADDRESS, TIPJAR_ABI } from '../contract'
 import { GoalCard } from './GoalCard'
 import { TipForm } from './TipForm'
 import { RecentTips } from './RecentTips'
 import { RecipientCard } from './RecipientCard'
+
+const RECIPIENT_A = '0x7B8f0B8E09ca522Ad3418fb89B9176f1bc74644c'.toLowerCase()
 
 const glass = {
   background: 'rgba(255,255,255,0.64)',
@@ -23,6 +26,26 @@ export function TipJarApp() {
   const { switchChain } = useSwitchChain()
   const [tipSuccess, setTipSuccess] = useState(false)
   const isWrongChain = isConnected && chainId !== TIPJAR_CHAIN_ID
+
+  const isOwner = isConnected && address?.toLowerCase() === RECIPIENT_A
+
+  const { writeContract, isPending } = useWriteContract()
+
+  const { data: pendingA } = useReadContract({
+    address: TIPJAR_ADDRESS,
+    abi: TIPJAR_ABI,
+    functionName: 'pendingBalance',
+    args: [RECIPIENT_A],
+    query: { enabled: isOwner },
+  })
+
+  const handleWithdraw = () => {
+    writeContract({
+      address: TIPJAR_ADDRESS,
+      abi: TIPJAR_ABI,
+      functionName: 'withdrawA',
+    })
+  }
 
   return (
     <div
@@ -108,6 +131,29 @@ export function TipJarApp() {
             Every tip goes directly on-chain and is split automatically.
           </p>
         </div>
+
+        {/* Owner Withdraw Section */}
+        {isOwner && (
+          <div className="mb-5 rounded-2xl p-5" style={glass}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Wallet size={18} style={{ color: 'var(--ink)' }} />
+                <span className="font-semibold" style={{ color: 'var(--ink)' }}>Your Balance</span>
+              </div>
+              <span className="text-lg font-bold" style={{ color: 'var(--ink)' }}>
+                {pendingA ? (Number(pendingA) / 1e6).toFixed(2) : '0.00'} USDC
+              </span>
+            </div>
+            <button
+              onClick={handleWithdraw}
+              disabled={isPending || !pendingA || Number(pendingA) === 0}
+              className="mt-4 w-full rounded-full py-3 text-sm font-semibold transition-opacity disabled:opacity-50"
+              style={{ background: 'var(--accent)', color: 'white' }}
+            >
+              {isPending ? 'Withdrawing...' : 'Withdraw'}
+            </button>
+          </div>
+        )}
 
         {/* Goal & totals */}
         <GoalCard onTipSuccess={tipSuccess} />
