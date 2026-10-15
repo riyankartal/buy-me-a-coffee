@@ -17,9 +17,9 @@ interface TipFormProps {
 }
 
 const PRESET_AMOUNTS = [
-  { label: 'Small', usdc: 5 },
-  { label: 'Medium', usdc: 10 },
-  { label: 'Large', usdc: 25 },
+  { label: '$1', usdc: 1 },
+  { label: '$3', usdc: 3 },
+  { label: '$5', usdc: 5 },
 ]
 
 type Step = 'idle' | 'approving' | 'tipping' | 'done'
@@ -32,7 +32,7 @@ const glassInner = {
 const spectral = 'linear-gradient(90deg, #5fbeff, #af8ff4, #f05c6b, #ffcd83, #7ef1b3)'
 
 export function TipForm({ walletAddress, isConnected, isWrongChain, onSuccess }: TipFormProps) {
-  const [selectedPreset, setSelectedPreset] = useState<number | null>(5)
+  const [selectedPreset, setSelectedPreset] = useState<number | null>(1)
   const [customAmount, setCustomAmount] = useState('')
   const [isCustom, setIsCustom] = useState(false)
   const [tipperName, setTipperName] = useState('')
