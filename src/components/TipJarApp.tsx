@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useAccount, useSwitchChain, useWriteContract, useReadContract } from 'wagmi'
 import { ConnectKitButton } from 'connectkit'
-import { parseUnits } from 'viem'
 
 import { TokenUSDC } from '@web3icons/react'
 import { Coffee, Users, Wallet } from 'lucide-react'
@@ -14,11 +13,11 @@ import { RecipientCard } from './RecipientCard'
 const RECIPIENT_A = '0x7B8f0B8E09ca522Ad3418fb89B9176f1bc74644c'.toLowerCase()
 
 const glass = {
-  background: 'rgba(255,255,255,0.64)',
+  background: 'rgba(255,255,255,0.72)',
   backdropFilter: 'blur(24px) saturate(180%)',
   WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-  border: '1px solid rgba(255,255,255,0.68)',
-  boxShadow: '0 8px 32px rgba(18,45,69,0.08), inset 0 1px 0 rgba(255,255,255,0.55)',
+  border: '1px solid rgba(255,255,255,0.5)',
+  boxShadow: '0 8px 32px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.4)',
 } as React.CSSProperties
 
 export function TipJarApp() {
@@ -50,24 +49,51 @@ export function TipJarApp() {
   return (
     <div
       className="relative min-h-dvh overflow-hidden"
-      style={{ background: 'linear-gradient(180deg, #f9f9fc 0%, #fffcf7 52%, #fbf7f2 100%)' }}
+      style={{
+        background: 'linear-gradient(160deg, #1a1a1a 0%, #2d2a26 35%, #f5f0eb 100%)',
+      }}
     >
-      {/* Ambient blobs */}
+      {/* Ambient coffee-themed shapes */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        {/* Left side abstract shape */}
         <div
           style={{
-            position: 'absolute', top: '6%', left: '4%', width: 320, height: 320,
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(133,177,237,0.18) 0%, transparent 70%)',
-            filter: 'blur(60px)',
+            position: 'absolute',
+            top: '15%',
+            left: '-8%',
+            width: 420,
+            height: 420,
+            borderRadius: '60% 40% 50% 50%',
+            background: 'radial-gradient(circle, rgba(90,70,55,0.35) 0%, transparent 70%)',
+            filter: 'blur(40px)',
+            transform: 'rotate(-15deg)',
           }}
         />
+        {/* Right side abstract shape */}
         <div
           style={{
-            position: 'absolute', bottom: '10%', right: '6%', width: 280, height: 280,
+            position: 'absolute',
+            bottom: '10%',
+            right: '-10%',
+            width: 380,
+            height: 380,
+            borderRadius: '50% 60% 40% 50%',
+            background: 'radial-gradient(circle, rgba(70,55,45,0.3) 0%, transparent 65%)',
+            filter: 'blur(50px)',
+            transform: 'rotate(20deg)',
+          }}
+        />
+        {/* Subtle steam-like shape top right */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '8%',
+            right: '12%',
+            width: 180,
+            height: 220,
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(255,205,131,0.18) 0%, transparent 70%)',
-            filter: 'blur(58px)',
+            background: 'radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%)',
+            filter: 'blur(30px)',
           }}
         />
       </div>
@@ -77,8 +103,8 @@ export function TipJarApp() {
         {/* Header */}
         <header className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Coffee size={20} style={{ color: 'var(--ink)' }} />
-            <span className="display text-lg font-bold" style={{ color: 'var(--ink)' }}>
+            <Coffee size={20} style={{ color: '#f5f0eb' }} />
+            <span className="display text-lg font-bold" style={{ color: '#f5f0eb' }}>
               TipJar
             </span>
           </div>
@@ -87,7 +113,7 @@ export function TipJarApp() {
               <button
                 onClick={show}
                 className="rounded-full px-4 py-2 text-sm font-semibold transition-opacity hover:opacity-80"
-                style={{ background: 'var(--accent)', color: 'white' }}
+                style={{ background: '#3d3833', color: 'white' }}
               >
                 {ck_connected
                   ? `${ck_address?.slice(0, 6)}…${ck_address?.slice(-4)}`
@@ -101,51 +127,51 @@ export function TipJarApp() {
         {isWrongChain && (
           <div
             className="mb-4 rounded-2xl p-4 flex items-center justify-between gap-3"
-            style={{ background: 'rgba(186,43,76,0.08)', border: '1px solid rgba(186,43,76,0.25)' }}
+            style={{ background: 'rgba(186,43,76,0.15)', border: '1px solid rgba(186,43,76,0.3)' }}
           >
-            <span className="text-sm font-medium" style={{ color: 'var(--danger)' }}>
+            <span className="text-sm font-medium" style={{ color: '#ff6b6b' }}>
               Switch to Arc Testnet to tip
             </span>
             <button
               onClick={() => switchChain({ chainId: TIPJAR_CHAIN_ID })}
               className="rounded-full px-3 py-1.5 text-xs font-semibold"
-              style={{ background: 'var(--danger)', color: 'white' }}
+              style={{ background: '#ba2b4c', color: 'white' }}
             >
               Switch
             </button>
           </div>
         )}
 
-{/* Hero */}
-<div className="mb-5 rounded-3xl p-6 text-center" style={glass}>
-  <img 
-    src="/coffee-cup.png" 
-    alt="Coffee" 
-    className="mx-auto mb-4 h-40 w-40 object-contain drop-shadow-lg"
-  />
-  <div className="mb-1 flex items-center justify-center gap-2">
-    <TokenUSDC variant="branded" size={20} />
-    <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--muted)' }}>
-      Powered by USDC on Arc
-    </span>
-  </div>
-  <h1 className="display mt-2 text-3xl font-bold leading-tight" style={{ color: 'var(--ink)', letterSpacing: '-0.03em' }}>
-    Support our work
-  </h1>
-  <p className="mt-1 text-sm" style={{ color: 'var(--ink-2)' }}>
-    Every tip goes directly on-chain and is split automatically.
-  </p>
-</div>
+        {/* Hero */}
+        <div className="mb-5 rounded-3xl p-6 text-center" style={glass}>
+          <img 
+            src="/coffee-cup.png" 
+            alt="Coffee" 
+            className="mx-auto mb-4 h-40 w-40 object-contain drop-shadow-lg"
+          />
+          <div className="mb-1 flex items-center justify-center gap-2">
+            <TokenUSDC variant="branded" size={20} />
+            <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: '#6b6560' }}>
+              Powered by USDC on Arc
+            </span>
+          </div>
+          <h1 className="display mt-2 text-3xl font-bold leading-tight" style={{ color: '#1a1a1a', letterSpacing: '-0.03em' }}>
+            Support our work
+          </h1>
+          <p className="mt-1 text-sm" style={{ color: '#4a4540' }}>
+            Every tip goes directly on-chain and is split automatically.
+          </p>
+        </div>
 
         {/* Owner Withdraw Section */}
         {isOwner && (
           <div className="mb-5 rounded-2xl p-5" style={glass}>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Wallet size={18} style={{ color: 'var(--ink)' }} />
-                <span className="font-semibold" style={{ color: 'var(--ink)' }}>Your Balance</span>
+                <Wallet size={18} style={{ color: '#1a1a1a' }} />
+                <span className="font-semibold" style={{ color: '#1a1a1a' }}>Your Balance</span>
               </div>
-              <span className="text-lg font-bold" style={{ color: 'var(--ink)' }}>
+              <span className="text-lg font-bold" style={{ color: '#1a1a1a' }}>
                 {pendingA ? (Number(pendingA) / 1e6).toFixed(2) : '0.00'} USDC
               </span>
             </div>
@@ -153,7 +179,7 @@ export function TipJarApp() {
               onClick={handleWithdraw}
               disabled={isPending || !pendingA || Number(pendingA) === 0}
               className="mt-4 w-full rounded-full py-3 text-sm font-semibold transition-opacity disabled:opacity-50"
-              style={{ background: 'var(--accent)', color: 'white' }}
+              style={{ background: '#3d3833', color: 'white' }}
             >
               {isPending ? 'Withdrawing...' : 'Withdraw'}
             </button>
@@ -168,13 +194,13 @@ export function TipJarApp() {
           <div
             className="rounded-2xl p-4"
             style={{
-              background: 'rgba(255,255,255,0.46)',
-              border: '1px solid rgba(255,255,255,0.56)',
+              background: 'rgba(255,255,255,0.55)',
+              border: '1px solid rgba(255,255,255,0.4)',
             }}
           >
             <div className="mb-3 flex items-center gap-2">
-              <Users size={14} style={{ color: 'var(--muted)' }} />
-              <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--muted)' }}>
+              <Users size={14} style={{ color: '#6b6560' }} />
+              <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: '#6b6560' }}>
                 Split
               </span>
             </div>
@@ -198,7 +224,7 @@ export function TipJarApp() {
 
         {/* Faucet hint */}
         {isConnected && (
-          <p className="mt-6 text-center text-xs" style={{ color: 'var(--subtle)' }}>
+          <p className="mt-6 text-center text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>
             Need test USDC? Use the <strong>Get test USDC</strong> button in the Arc Studio sidebar.
           </p>
         )}
